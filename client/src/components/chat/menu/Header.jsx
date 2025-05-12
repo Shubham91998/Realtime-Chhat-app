@@ -1,11 +1,12 @@
 
-import { useContext } from "react"
+import { useContext , useState} from "react"
 
 import { AccountContext } from "../../../context/Accountprovider"
 import { Box , styled} from "@mui/material"
 import {Chat as MessageIcon} from "@mui/icons-material"
 
 import HeaderMenu from "./HeaderMenu.jsx"
+import Infodraw from "../../drawer/Infodraw.jsx"
 
 
 const Components = styled(Box)`
@@ -36,17 +37,24 @@ const Image = styled('img')({
     borderRadius:'50%',
 })
 const Header = () => {
+
+  const [opendraw, setOpendraw] = useState(false);
     const {account} = useContext(AccountContext)
+
+    const toggleDraw = () => {
+      setOpendraw(true)
+    }
   return (
     <>
       <Components>
-        <Image src={account.picture} alt="dp" />
+        <Image src={account.picture} alt="dp" onClick={() => toggleDraw()}/>
 
         <Wrapper>
             <MessageIcon/>
-            <HeaderMenu />
+            <HeaderMenu setOpendraw={setOpendraw}/>
         </Wrapper>
       </Components>
+      <Infodraw open={opendraw} setOpen={setOpendraw}/>
     </>
   )
 }
