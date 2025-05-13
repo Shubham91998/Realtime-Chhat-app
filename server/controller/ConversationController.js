@@ -23,3 +23,17 @@ export const newConversation = async (req, res) => {
         return res.status(500).json({ message: "Conversation failed.", error: error.message }); // wrapped properly
     }
 }
+
+
+export const getConversation = async(req, res) => {
+    try {
+        const senderId = req.body.senderId;
+        const receiverId = req.body.receiverId;
+        
+        const conversations = await conversation.findOne({members: { $all: [senderId, receiverId]}})
+        return res.status(200).json(conversations);
+    
+    } catch (error) {
+        return res.status(500).json(error.message);
+    }
+}
