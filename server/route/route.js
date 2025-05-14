@@ -2,6 +2,9 @@ import express from "express";
 import { addUser, getUsers } from "../controller/userController.js";
 import { newConversation, getConversation } from "../controller/ConversationController.js";
 import { newMessage, getMessage } from "../controller/MessageController.js";
+import { uploadFile, getImage } from "../controller/ImaheController.js";
+import upload from "../utils/upload.js";
+
 
 
 const route = express.Router();
@@ -15,6 +18,9 @@ route.post('/conversation/add', newConversation)
 route.post('/conversation/get', getConversation)
 
 route.post('/message/add', newMessage)
-route.post('/message/get/:id', getMessage)
+route.get('/message/get/:id', getMessage)
+
+route.post('/file/upload',upload.single('file'), uploadFile)
+route.get('/file/:filename', getImage);
 
 export default route;

@@ -24,7 +24,7 @@ const Conversationss = ({user}) => {
 
     const getUser = async() => {
         setPerson(user);
-        await setConversation({senderId: account.sub, recieverId: user.sub})
+        await setConversation({senderId: account.sub, receiverId: user.sub})
     }
 
   return (
