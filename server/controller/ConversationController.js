@@ -1,39 +1,35 @@
 import conversation from "../model/ConversationModel.js";
 
-export const newConversation = async (req, res) => {
-    try {
-        const senderId = req.body.senderId;
-        const receiverId = req.body.receiverId;
+export const newConversation = async (request, response) => {
+    let senderId = request.body.senderId;
+    let receiverId = request.body.receiverId;
 
-        const exist = await conversation.findOne({ members: { $all: [receiverId, senderId] } });
-
-        if (exist) {
-            return res.status(200).json("Conversation already exists.");
-        }
-
-        const newConversation = new conversation({
-            members: [senderId, receiverId],
-        });
-
-        await newConversation.save();  // fixed here
-
-        return res.status(200).json("Conversation saved successfully.");  // fixed typo
+    const exist = await conversation.findOne({ members: { $all: [receiverId, senderId]  }})
     
-    } catch (error) {
-        return res.status(500).json({ message: "Conversation failed.", error: error.message }); // wrapped properly
+    if(exist) {
+        response.status(200).json('conversation already exists');
+        return;
     }
+    const newConversation = new conversation({
+        members: [senderId, receiverId]
+    });
+
+    try {
+        const savedConversation = await newConversation.save();
+        response.status(200).json(savedConversation);
+    } catch (error) {
+        response.status(500).json(error);
+    }
+
 }
 
 
-export const getConversation = async(req, res) => {
+export const getConversation = async (request, response) => {
     try {
-        const senderId = req.body.senderId;
-        const receiverId = req.body.receiverId;
-        
-        const conversations = await conversation.findOne({members: { $all: [senderId, receiverId]}})
-        return res.status(200).json(conversations);
-    
+        const conversations = await conversation.findOne({ members: { $all: [ request.body.senderId, request.body.receiverId] }});
+        response.status(200).json(conversations);
     } catch (error) {
-        return res.status(500).json(error.message);
+        response.status(500).json(error);
     }
+
 }

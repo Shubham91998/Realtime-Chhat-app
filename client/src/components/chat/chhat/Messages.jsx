@@ -34,12 +34,13 @@ const Messages = ({ person, conversation }) => {
       setMessages(data);
     };
     getMessageDetails();
-  }, [person._id, conversation?._id, newMessageFlag]);
+  }, [conversation?._id, person._id, newMessageFlag]);
 
   const sendText = async (e) => {
-    const code = e.keyCode || e.which;
+    let code = e.keyCode || e.which;
 
     if (code === 13) {
+      
       let message = {};
       if (!file) {
         message = {
@@ -52,18 +53,19 @@ const Messages = ({ person, conversation }) => {
       } else {
         message = {
           senderId: account.sub,
-          receiverId: person.sub,
           conversationId: conversation._id,
+          receiverId: person.sub,
           type: "file",
           text: image,
         };
       }
+      console.log("Message from frontend:- ", message)
       await newMessage(message);
-      setValue("");
-      setFile("");
-      setImage("");
 
-      setnewMessageFlag((prev) => !prev);
+      setValue("");
+      setFile();
+      setImage("");
+      setnewMessageFlag(prev => !prev);
     }
   };
 
@@ -72,11 +74,13 @@ const Messages = ({ person, conversation }) => {
       <Component>
         {messages &&
           messages.map((message) => (
-            <Container key={message._id}>
+            <Container>
               <Message message={message} />
             </Container>
           ))}
       </Component>
+
+      {/* key={message._id}  upar container me rakh sakte hai*/}
       <Footer
         sendText={sendText}
         setValue={setValue}
